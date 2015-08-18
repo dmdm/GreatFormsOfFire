@@ -1,0 +1,16 @@
+{
+  "name": "GreatFormsOfFire",
+  "description": "Great Forms Of Fire",
+  "version": "0.0.0",
+  "homepage": "",
+  "license": "2 sentence BSD",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-loader": "~1.4.0",
+    "angular-mocks": "~1.4.0",
+    "html5-boilerplate": "~5.2.0",
+    "angular-material": "~0.10.1"
+  }
+}

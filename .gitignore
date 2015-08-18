@@ -1,0 +1,55 @@
+logs/*
+!.gitkeep
+node_modules/
+bower_components/
+dist/
+tmp
+.DS_Store
+*.egg
+*.egg-info
+eggs
+parts
+sdist
+develop-eggs
+.installed.cfg
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# dmdm
+.*.swp
+var/cache/*
+var/log/*
+var/db/*
+var/run/*
+var/sstore/*
+var/sessions/data/*
+var/sessions/lock/*
+.~*
+*~
+*.pgdump
+*.pgdump.gz
+*.pyc
+__pycache__
+*secrets.yaml
+downloads
+art
+Pym.egg-info
+.coverage
+_tmp*
+priv/*
+.idea

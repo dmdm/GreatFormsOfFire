@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Creates directories for project and sets permissions.
+#
+# Maybe must be run with sudo to set ownership correctly.
+
+
+## Configure here #####################################################
+
+# Configure the owner of all files (defaults to current user), and the group
+# that gets execute permission on the scripts in bin/ (defaults to 1st group of
+# current user).
+if [ `hostname` == "foobar" ]
+then
+    USER="foo"
+    GROUP="bar"
+else
+    USER=${USER}
+    GROUP=${GROUPS}
+fi
+# This group should be the group of the web server. It must have read permission
+# to all directories, and will get write permission to var/.
+# If current user shall maintain this installation, make sure he is member of
+# this group too.
+GROUP_APPLICATION="www-data"
+
+# As a safeguard that this script is executed form the correct directory, we
+# check that we either are in the project directory or in this egg.
+# Adjust version numbers accordingly.
+EGG="Greatformsoffire-0.1-py3.4.egg"
+
+# Project must match your project root directory
+PROJECT="GreatFormsOfFire"
+# Python sources root directory is derived from project root, you may override
+# it.
+SRC_ROOT="$(echo $PROJECT | tr '[A-Z]' '[a-z]')"
+
+#######################################################################
+
+function die()
+{
+	echo "*** ERROR: $1. Exit code: $2" 1>&2
+	exit $2
+}
+
+function mk_dir()
+{
+	dir=$1
+	usr=$2
+	grp=$3
+	perm_dir=$4
+	perm_file=$5
+
+	echo "- Directory '$dir'"
+	if [ -e "$dir" ]
+		then
+		echo "  Exists"
+	else
+		echo "  Creating"
+		mkdir -p "$dir" || die "Failed to create dir '$dir': $?" $?
+	fi
+
+	echo "  Setting ownership to $usr.$grp"
+	chown -R $usr.$grp "$dir" || die "Failed to set ownership: $?" $?
+
+	echo "  Setting directory permissions to $perm_dir"
+	chmod -R "$perm_dir" "$dir"
+	echo "  Setting file permissions to $perm_file"
+	find $dir -type f -exec chmod "$perm_file" {} \;
+}
+
+
+# Make sure, we are in the right directory
+d=$(basename $(pwd))
+if [ "$d" != "$PROJECT" -a "$d" != "$EGG" ]
+	then
+	die "You are not in project dir '$PROJECT': '$d'" 50
+fi
+
+mk_dir "bin"              $USER $GROUP             775 744
+mk_dir "var"              $USER $GROUP_APPLICATION 755 644
+mk_dir "var/cache"        $USER $GROUP_APPLICATION 775 664
+mk_dir "var/cache/mako"   $USER $GROUP_APPLICATION 775 664
+mk_dir "var/log"          $USER $GROUP_APPLICATION 775 664
+mk_dir "var/sessions"     $USER $GROUP_APPLICATION 775 664
+mk_dir "var/sstore"       $USER $GROUP_APPLICATION 775 664
+mk_dir "var/run"          $USER $GROUP_APPLICATION 775 664
+mk_dir "var/db"           $USER $GROUP_APPLICATION 775 664
+mk_dir "var/tmp_uploads"  $USER $GROUP_APPLICATION 775 664
+mk_dir "$SRC_ROOT/locale"       $USER $GROUP_APPLICATION 755 644
+

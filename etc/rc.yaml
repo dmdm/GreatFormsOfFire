@@ -1,0 +1,182 @@
+# XXX Put actual secrets into rcsecrets.yaml
+
+# ###########################################
+#   General Settings
+# ###########################################
+
+project.title: Great Forms Of Fire
+project.subtitle:
+project.description: Great Forms Of Fire
+project.keywords: Parenchym, Pyramid, Python
+project.version: 0.1
+project.author: Dirk Makowski (http://parenchym.com/)
+project.copyright: "(c) 2015 Dirk Makowski"
+project.copyright_link: http://parenchym.com/
+
+
+debug: false
+
+
+upload_tmp_dir: "{here}/var/tmp_uploads"
+
+
+# ---[ OpenID Connect  ]-------
+
+# Client ID for web applications, if statically registered at provider
+# Key is ``oidc.me.`` + PROVIDER + PROJECT
+oidc.me.google.Parenchym:
+  # Path to JSON file with secrets as downloaded from Google Developers Console
+  secret_file: ~/google-client_secret.json
+  # override settings from secret file with these
+  #redirect_uri: http://localhost:6543/oauth2callback
+  redirect_uri: postmessage
+  javascript_origin: http://localhost:6543
+  response_type: code
+  scope:
+  - "https://www.googleapis.com/auth/plus.login"
+  - "https://www.googleapis.com/auth/plus.me"
+  - "email"
+  - "profile"
+  cookie_policy: single_host_origin
+  access_type: offline
+  approval_prompt: auto
+  request_visible_actions: http://schemas.google.com/AddActivity
+  theme: dark
+
+# URL to retrieve Google's Discovery Document
+oidc.discovery.google: https://accounts.google.com/.well-known/openid-configuration
+# URL to let Google parse the id_token (debugging only!)
+oidc.token_info.google: https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=
+
+# ---[ Encryption ]-------
+
+encryption.secret: SECRET
+
+
+# ---[ Email ]-------
+
+mail.sender: pym@localhost
+mail.host: localhost
+mail.port: 25
+
+
+# ---[ Authentication ]-------
+
+auth.tkt_policy.secret: SECRET
+### # Allows/disables registration of new user accounts, be it
+### # via OpenId or via our UI
+### auth.allow_registration: False
+# Initial password for user 'root'
+auth.user_root.pwd: SECRET
+# Class for auth provider (login/logout)
+auth.provider: pym.auth.AuthProvider
+# Class for user objects
+auth.class.user: pym.auth.models.User
+# Encrypt password using this scheme.
+# Pym uses passlib with one of these schemes:
+#   ldap_plaintext, ldap_salted_sha1, sha512_crypt, pbkdf2_sha512
+auth.password_scheme: pbkdf2_sha512
+
+# ---[ I18N ]-------
+
+pyramid.default_locale_name: en
+i18n.avail_languages:
+- de
+- en
+# allow all languages
+- '*'
+
+
+# ===========================================
+#   Database
+# ===========================================
+
+
+# ---[ Cache ]-------
+
+# General URL to redis cache
+cache.redis.url: redis:///tmp/redis.sock?db=0
+
+cache.regions: [region_default, region_auth_short_term, region_auth_long_term]
+
+# In principle, each region may define its own URL and DB independently, but
+# for the time being, to stay consistent with CLI scripts, all regions should
+# use the same database, denoted by 'cache.redis.url' above.
+cache.region_default.backend: dogpile.cache.redis
+cache.region_default.arguments.unix_socket_path: redis:///tmp/redis.sock?db=0
+cache.region_default.arguments.db: 0
+cache.region_default.arguments.redis_expiration_time: 300  # 5 min
+cache.region_default.arguments.distributed_lock: true
+
+cache.region_auth_short_term.backend: dogpile.cache.redis
+cache.region_auth_short_term.arguments.unix_socket_path: redis:///tmp/redis.sock?db=0
+cache.region_auth_short_term.arguments.db: 0
+cache.region_auth_short_term.arguments.redis_expiration_time: 600  # 10 min
+cache.region_auth_short_term.arguments.distributed_lock: true
+
+cache.region_auth_long_term.backend: dogpile.cache.redis
+cache.region_auth_long_term.arguments.unix_socket_path: redis:///tmp/redis.sock?db=0
+cache.region_auth_long_term.arguments.db: 0
+cache.region_auth_long_term.arguments.redis_expiration_time: 7200  # 2 hrs
+cache.region_auth_long_term.arguments.distributed_lock: true
+
+
+# ---[ Redis ]-------
+
+# Configure another connection, so that we can access the cache db from outside
+# of dogpile.cache.
+redis.unix_socket_path: /tmp/redis.sock
+redis.db: 0
+redis.max_connections: ~
+
+# {here} is expanded to absolute path which starts with `/'
+# To be absolute, URL must start with 4 `/', hence we type 3 `/' literally here
+db.pym.sa.url : "sqlite:///{here}/var/db/pym.sqlite3"
+
+full_db_errors: false
+
+# ###########################################
+#   Framework
+# ###########################################
+
+# ---[ Pyramid ]-------
+
+pyramid.reload_templates: false
+pyramid.debug_templates: false
+pyramid.debug_authorization: false
+pyramid.debug_notfound: false
+pyramid.debug_routematch: false
+# XXX  Define includes in the paster INI files.
+#      We then can better differentiate between e.g. devel and production
+### # If given in paster INI, these values are separated by \n
+### # Here we give them as list...  DOES THIS MATTER?
+### pyramid.includes:
+### - pyramid_debugtoolbar
+### - pyramid_tm
+### #pyramid.includes: |
+### #  pyramid_debugtoolbar
+### #  pyramid_tm
+
+# ---[ Mako ]-------
+
+# We can use path names or asset specs.
+# If we use asset specs throughout, we do not need to define dirs here.
+mako.directories: []
+
+# If module_directory is empty, compiled templates are stored in memory.
+mako.module_directory : "{here}/var/cache/mako"
+mako.strict_undefined: true
+
+# ---[ Beaker ]-------
+
+session.type : file
+session.data_dir : "{here}/var/sessions/data"
+session.lock_dir : "{here}/var/sessions/lock"
+session.key : SECRET
+session.secret : SECRET
+session.cookie_on_exception : true
+# True: cookie expires when browser is closed, else timestamp or seconds
+session.cookie_expires: true
+# Timeout in seconds
+session.timeout: 1800
+
