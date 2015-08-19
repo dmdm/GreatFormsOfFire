@@ -35,6 +35,7 @@
     "http-server": "^0.6.1",
     "jasmine-core": "^2.3.4",
     "jshint-stylish": "^1.0.0",
+    "jspm": "^0.16.0",
     "karma": "~0.12",
     "karma-chrome-launcher": "^0.1.12",
     "karma-firefox-launcher": "^0.1.6",
@@ -64,5 +65,23 @@
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor e2e-tests/protractor.conf.js",
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map','app/bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\""
+  },
+  "jspm": {
+    "directories": {
+      "baseURL": "client/src"
+    },
+    "dependencies": {
+      "angular": "github:angular/bower-angular@^1.4.1",
+      "angular-animate": "github:angular/bower-angular-animate@^1.4.1",
+      "angular-aria": "github:angular/bower-angular-aria@^1.4.1",
+      "angular-material": "github:angular/bower-material@master",
+      "css": "github:systemjs/plugin-css@^0.1.6",
+      "json": "github:systemjs/plugin-json@^0.1.0",
+      "text": "github:systemjs/plugin-text@^0.0.2"
+    },
+    "devDependencies": {
+      "traceur": "github:jmcriffey/bower-traceur@0.0.91",
+      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91"
+    }
   }
 }

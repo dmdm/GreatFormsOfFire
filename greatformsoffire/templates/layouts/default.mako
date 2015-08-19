@@ -11,19 +11,16 @@
     <meta name="keywords" content="<%block name="meta_keywords">${request.registry.settings['project.keywords']}</%block>">
     <meta name="author" content="<%block name="meta_author">${request.registry.settings['project.author']}</%block>">
     <%block name="styles">
-        % if request.registry.settings['environment'] == 'production':
-            <link rel="stylesheet" href="${request.static_url('greatformsoffire:static/bower_components/angular-material/angular-material.min.css')}">
-            <link rel="stylesheet" href="${request.static_url('greatformsoffire:static/assets/css/app.css')}">
-        % else:
-            <link rel="stylesheet" href="${request.static_url('greatformsoffire:static/bower_components/angular-material/angular-material.css')}">
-            <link rel="stylesheet" href="${request.static_url('greatformsoffire:static/assets/css/app.css')}">
-        % endif
+        <style type="text/css">
+            [ng-cloak] { display: none; }
+        </style>
+        <link rel="stylesheet" href="${request.static_url('greatformsoffire:static/assets/css/app.css')}">
         % if request.registry.settings['environment'] != 'production':
             <link rel="stylesheet" href="${request.static_url('pym:static/css/styles-' + request.registry.settings['environment'] + '.css')}">
         % endif
     </%block>
 </head>
-<body ng-app="starterApp" ng-strict-di layout="column" ng-controller="UserController as ul">
+<body ng-cloak layout="column" ng-controller="UsersController as ul">
 
 <!--[if lt IE 10]>
     <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
@@ -38,46 +35,22 @@
 
 </div><!-- END #page_container -->
 
-##
-## Load 3rd-party libraries
-##
-% if request.registry.settings['environment'] == 'production':
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular/angular.min.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular-animate/angular-animate.min.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular-aria/angular-aria.min.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular-material/angular-material.min.js')}"></script>
-% else:
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular/angular.min.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular-animate/angular-animate.min.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular-aria/angular-aria.min.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/bower_components/angular-material/angular-material.min.js')}"></script>
-% endif
-
-##
-## Load our app
-##
-
-## Consts must precede the main app!
-## Cannot put them in their own JS file, because we need to build the JSON data
-## from the server.
-<script type="text/javascript">
-(function () {
-    'use strict';
-
-    angular
-        .module('constants', [])
-        .constant('RC', ${h.json_serializer(rc)|n})
-        .constant('T', ${h.json_serializer(t)|n});
-
-}());
-</script>
 % if request.registry.settings['environment'] == 'production':
     <script src="${request.static_url('greatformsoffire:static/app/main.min.js')}"></script>
 % else:
-    <script src="${request.static_url('greatformsoffire:static/app/_forward_declarations.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/app/app.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/app/users/UserController.js')}"></script>
-    <script src="${request.static_url('greatformsoffire:static/app/users/UserService.js')}"></script>
+    <script src="${request.static_url('greatformsoffire:static/jspm_packages/system.js')}"></script>
+    <script src="${request.static_url('greatformsoffire:static/config.js')}"></script>
+    <script type="text/javascript">
+        System.import('angular').then(function (angular) {
+            angular
+                .module('constants', [])
+                .constant('RC', ${h.json_serializer(rc)|n})
+                .constant('T', ${h.json_serializer(t)|n});
+        });
+        System
+            .import('app/boot');
+            //.catch( console.error.bind(console) );
+    </script>
 % endif
 
 </body>

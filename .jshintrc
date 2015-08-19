@@ -10,10 +10,10 @@
   "indent": 2,
   "newcap": true,
   "noarg": true,
-  "quotmark": "single",
+  "quotmark": false,
   "undef": true,
   "unused": "vars",
-  "strict": true,
+  "strict": false,
   "globalstrict": true,
   "globals": {
     "angular": false,

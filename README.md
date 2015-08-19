@@ -63,6 +63,18 @@ We use PostgreSQL by default. Change these steps to match your server.
 Running
 -------
 
+**This branch uses ES6 modules.**
+
+Based on the ES6 branch of material-start, we use JSPM and the traceur
+transpiler. By default, we load traceur in the browser and compile each file
+on the fly.
+
+TODO
+
+- Bundling and pre-compiling.
+- gulp serve is broken at the moment (any task that handles scripts). Need to
+  use gulp_traceur.
+
 ### Development
 
 Run the development server with

@@ -1,11 +1,3 @@
-(function () {
-    'use strict';
-
-    angular.module('users')
-        .service('userService', UserService);
-
-    UserService.$inject = ['$q'];
-
     /**
      * Users DataService
      * Uses embedded, hard-coded data model; acts asynchronously to simulate
@@ -14,7 +6,7 @@
      * @returns {{loadAll: Function}}
      * @constructor
      */
-    function UserService($q) {
+    function UsersDataService($q) {
         var users = [
             {
                 name: 'Lia Lugo',
@@ -57,4 +49,4 @@
         };
     }
 
-})();
+export default [ '$q', '$log', UsersDataService ];
